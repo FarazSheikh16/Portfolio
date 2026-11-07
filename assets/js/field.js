@@ -175,14 +175,25 @@
       ctx.fillRect(p.x, p.y, p.s, p.s);
     }
 
-    // the shape
-    ctx.fillStyle = accent;
+    // accent glow behind the shape (the 10%: glow, highlight, query)
+    const sb = stage();
+    if (sb.w > 20) {
+      const cx = sb.x + sb.w * 0.5, cy = sb.y + sb.h * 0.55;
+      const r = Math.max(10, Math.min(Math.max(sb.w, sb.h) * 0.7, H - cy - 2, cy - 2)); // stay inside the canvas so no hard edge
+      const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+      gr.addColorStop(0, accent); gr.addColorStop(1, "transparent");
+      ctx.globalAlpha = 0.13; ctx.fillStyle = gr;
+      ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    }
+
+    // the shape, in the light colour; a hovered cluster lights up in the accent
     for (const p of P) {
       if (p.amb) continue;
       const lit = focus >= 0 && p.g === focus;
       const faded = focus >= 0 && p.g !== focus;
-      ctx.globalAlpha = faded ? 0.18 : lit ? 1 : p.g === -1 && section !== "about" ? 0.35 : 0.8;
-      const s = lit ? 2.6 : 2;
+      ctx.fillStyle = lit ? accent : head;
+      ctx.globalAlpha = faded ? 0.16 : lit ? 1 : p.g === -1 && section !== "about" ? 0.3 : 0.72;
+      const s = lit ? 2.6 : 1.9;
       ctx.fillRect(p.x - s / 2, p.y - s / 2, s, s);
     }
 

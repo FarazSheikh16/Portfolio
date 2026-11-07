@@ -135,7 +135,7 @@
       <h4>What I built</h4><ul class="bul">${p.built.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>
       <h4>Architecture</h4>${flow(p.flow)}${p.eval ? `<h4>Evaluation loop</h4>${flow(p.eval)}` : ""}
       <h4>Stack</h4>${tags(p.stack)}
-      ${p.links ? `<div class="m-links">${p.links.map(([l, h]) => `<a href="${h}" ${ext}>${esc(l)} ↗</a>`).join("")}</div>` : ""}
+      <div class="m-links"><a href="mailto:${P.email}?subject=${encodeURIComponent("About " + p.short)}">Talk to me about this <span aria-hidden="true">→</span></a>${(p.links || []).map(([l, h]) => `<a href="${h}" ${ext}>${esc(l)} ↗</a>`).join("")}</div>
     </div>`;
     if (!modal.open) modal.showModal();
     modal.scrollTop = 0;

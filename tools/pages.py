@@ -5,7 +5,7 @@ Bump ASSET_VERSION after changing CSS or JS so returning visitors get the new fi
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-ASSET_VERSION = "21"
+ASSET_VERSION = "24"
 NAME = "Ahmad Faraz Sheikh"
 EMAIL = "faraz.sheikh2001@gmail.com"
 
@@ -155,7 +155,7 @@ def page(fname, cfg):
 <div class="spot" aria-hidden="true"></div>
 <a class="skip" href="#main">Skip to content</a>
 {cfg["body"]}
-<dialog id="modal" class="sand" aria-labelledby="mTitle"><div id="modalBody"></div></dialog>
+<dialog id="modal" aria-labelledby="mTitle"><div id="modalBody"></div></dialog>
 <noscript><p style="text-align:center;padding:2rem">This site needs JavaScript to show its content. Email <a href="mailto:{EMAIL}">{EMAIL}</a>.</p></noscript>
 <script src="assets/js/content.js?v={v}" defer></script>
 <script src="assets/js/field.js?v={v}" defer></script>
