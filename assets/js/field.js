@@ -16,6 +16,7 @@
   let P = [];                    // points
   let labels = [];               // {x, y, text, g, align}
   let section = "about", focus = -1, setAt = 0, gx = 0, gy = 0;
+  let noStage = false; // true when the left column has no room for a shape: its points join the background dots
   let mx = -9999, my = -9999, mouseIn = false;
   let accent = "#e2c58f", dim = "#7f8c7d", head = "#efe6d2", electric = "#a77bff";
   const rnd = (a, b) => a + Math.random() * (b - a);
@@ -36,26 +37,36 @@
     return { x: r.left, y: r.top + oy, w: r.width, h: r.height };
   };
 
+  /* points sampled from text drawn off-screen, used for the About and Hire me shapes */
+  const textPoints = (n, b, str, weight = 800, maxFrac = 0.9) => {
+    const off = document.createElement("canvas");
+    off.width = Math.max(1, b.w | 0); off.height = Math.max(1, b.h | 0);
+    const o = off.getContext("2d");
+    let fs = b.h * 0.95;
+    o.font = `${weight} ${fs}px Inter, system-ui, sans-serif`;
+    const tw = o.measureText(str).width;
+    if (tw > b.w * maxFrac) { fs *= (b.w * maxFrac) / tw; o.font = `${weight} ${fs}px Inter, system-ui, sans-serif`; }
+    o.textBaseline = "middle"; o.textAlign = "left";
+    o.fillText(str, 0, b.h / 2);
+    const data = o.getImageData(0, 0, off.width, off.height).data;
+    const pts = [];
+    const step = Math.max(2, Math.round(Math.sqrt((b.w * b.h) / 5000)));
+    for (let y = 0; y < off.height; y += step) for (let x = 0; x < off.width; x += step) if (data[(y * off.width + x) * 4 + 3] > 128) pts.push([x, y]);
+    if (!pts.length) return Array.from({ length: n }, () => ({ x: b.x + rnd(0, b.w), y: b.y + rnd(0, b.h), g: -1 }));
+    return Array.from({ length: n }, () => { const p = pts[(Math.random() * pts.length) | 0]; return { x: b.x + p[0] + rnd(-1, 1), y: b.y + p[1] + rnd(-1, 1), g: -1 }; });
+  };
+
   /* ---------- shapes: each returns S targets {x,y,g} and sets labels ---------- */
   const shapes = {
     about(n, b) {
-      // the initials, sampled from text drawn off-screen
-      const off = document.createElement("canvas");
-      off.width = Math.max(1, b.w | 0); off.height = Math.max(1, b.h | 0);
-      const o = off.getContext("2d");
-      let fs = b.h * 0.95;
-      o.font = `800 ${fs}px Inter, system-ui, sans-serif`;
-      const tw = o.measureText("AF").width;
-      if (tw > b.w * 0.9) { fs *= (b.w * 0.9) / tw; o.font = `800 ${fs}px Inter, system-ui, sans-serif`; }
-      o.textBaseline = "middle"; o.textAlign = "left";
-      o.fillText("AF", 0, b.h / 2);
-      const data = o.getImageData(0, 0, off.width, off.height).data;
-      const pts = [];
-      const step = Math.max(2, Math.round(Math.sqrt((b.w * b.h) / 5000)));
-      for (let y = 0; y < off.height; y += step) for (let x = 0; x < off.width; x += step) if (data[(y * off.width + x) * 4 + 3] > 128) pts.push([x, y]);
       labels = [{ x: b.x, y: b.y + b.h + 4, text: "embedding(\"Ahmad Faraz Sheikh\")", g: -1, align: "left" }];
-      if (!pts.length) return Array.from({ length: n }, () => ({ x: b.x + rnd(0, b.w), y: b.y + rnd(0, b.h), g: -1 }));
-      return Array.from({ length: n }, () => { const p = pts[(Math.random() * pts.length) | 0]; return { x: b.x + p[0] + rnd(-1, 1), y: b.y + p[1] + rnd(-1, 1), g: -1 }; });
+      return textPoints(n, b, "AF");
+    },
+
+    hire(n, b) {
+      // an @: the message waiting to be sent
+      labels = [{ x: b.x, y: b.y + b.h + 4, text: "send(message, to=\"faraz\")", g: -1, align: "left" }];
+      return textPoints(n, b, "@", 600);
     },
 
     experience(n, b) {
@@ -112,7 +123,7 @@
     SHAPE = small ? 320 : 620;
     P = Array.from({ length: N }, (_, i) => {
       const p = { x: rnd(0, W), y: rnd(0, H), vx: 0, vy: 0, tx: 0, ty: 0, g: -1, d: 0, amb: i >= SHAPE, ph: rnd(0, 6.28), sp: rnd(0.2, 0.6), s: rnd(0.8, 1.6) };
-      if (p.amb) ambientTarget(p);
+      ambientTarget(p); // every point gets a background spot, used when there is no room for a shape
       return p;
     });
   };
@@ -130,7 +141,12 @@
 
   const retarget = (stagger) => {
     const b = stage();
-    if (b.w < 20 || b.h < 20) return;
+    if (b.w < 40 || b.h < 60) {
+      noStage = true; labels = [];
+      if (reduce) { P.forEach((p) => { p.x = p.bx; p.y = p.by; }); draw(performance.now()); }
+      return;
+    }
+    noStage = false;
     const t = (shapes[section] || shapes.about)(SHAPE, b);
     const now = performance.now();
     setAt = now;
@@ -153,11 +169,12 @@
     for (const p of P) {
       if (!reduce) {
         let tx, ty;
-        if (p.amb) { tx = p.bx + Math.sin(t * p.sp + p.ph) * 24; ty = p.by + Math.cos(t * p.sp * 0.8 + p.ph) * 18; }
+        const am = p.amb || noStage;
+        if (am) { tx = p.bx + Math.sin(t * p.sp + p.ph) * 24; ty = p.by + Math.cos(t * p.sp * 0.8 + p.ph) * 18; }
         else if (now < p.d) { tx = p.x; ty = p.y; }
         else { tx = p.tx + Math.sin(t * 1.3 + p.ph) * 0.8; ty = p.ty + Math.cos(t * 1.1 + p.ph) * 0.8; }
-        p.vx = (p.vx + (tx - p.x) * (p.amb ? 0.004 : 0.05)) * 0.84;
-        p.vy = (p.vy + (ty - p.y) * (p.amb ? 0.004 : 0.05)) * 0.84;
+        p.vx = (p.vx + (tx - p.x) * (am ? 0.004 : 0.05)) * 0.84;
+        p.vy = (p.vy + (ty - p.y) * (am ? 0.004 : 0.05)) * 0.84;
         if (mouseIn) {
           const dx = p.x - mx, dy = p.y - my, d = Math.hypot(dx, dy);
           if (d < R && d > 0.1) { const f = (1 - d / R) * 1.1; p.vx += (dx / d) * f; p.vy += (dy / d) * f; }
@@ -170,7 +187,7 @@
     // ambient field
     ctx.fillStyle = dim;
     const base = desk.matches ? 0.45 : 0.3;
-    for (const p of P) if (p.amb) {
+    for (const p of P) if (p.amb || noStage) {
       // fade out where the green shades into sand
       ctx.globalAlpha = base * Math.max(0, Math.min(1, desk.matches ? (W - p.x) / 220 : (H - 60 - p.y) / 200));
       ctx.fillRect(p.x, p.y, p.s, p.s);
@@ -178,7 +195,7 @@
 
     // accent glow behind the shape (the 10%: glow, highlight, query)
     const sb = stage();
-    if (sb.w > 20) {
+    if (!noStage && sb.w > 20) {
       const cx = gx || sb.x + sb.w * 0.5, cy = gy || sb.y + sb.h * 0.55; // centre of the shape itself
       const r = Math.max(10, Math.min(Math.max(sb.w, sb.h) * 0.7, H - cy - 2, cy - 2)); // stay inside the canvas so no hard edge
       const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
@@ -189,7 +206,7 @@
 
     // the shape, in the light colour; a hovered cluster lights up in the accent
     for (const p of P) {
-      if (p.amb) continue;
+      if (p.amb || noStage) continue;
       const lit = focus >= 0 && p.g === focus;
       const faded = focus >= 0 && p.g !== focus;
       ctx.fillStyle = lit ? accent : head;
@@ -199,7 +216,7 @@
     }
 
     // labels
-    if (settle > 0) {
+    if (settle > 0 && !noStage) {
       ctx.font = `500 11px ${MONO}`;
       ctx.textBaseline = "top";
       for (const l of labels) {
@@ -247,6 +264,8 @@
   document.addEventListener("pointerleave", () => { mouseIn = false; });
   let rt;
   addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(resize, 120); });
+  // the shape box changes size when the column reflows (fonts load, short screens): re-measure then
+  if (window.ResizeObserver) { let last = ""; new ResizeObserver(() => { const r = viz.getBoundingClientRect(); const k = Math.round(r.width) + "x" + Math.round(r.height); if (k !== last) { last = k; clearTimeout(rt); rt = setTimeout(resize, 80); } }).observe(viz); }
   desk.addEventListener?.("change", resize);
 
   window.Field = {

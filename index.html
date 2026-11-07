@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=25">
+<link rel="stylesheet" href="assets/css/style.css?v=32">
 </head>
 <body data-page="index">
 <div class="spot" aria-hidden="true"></div>
@@ -26,7 +26,7 @@
 <div class="topbar" role="banner">
   <div class="tb-in">
     <a class="brand" href="#about" data-sec="about" aria-label="Ahmad Faraz Sheikh, back to start"><span>AF</span></a>
-    <nav class="tb-nav" aria-label="Sections"><a href="#about" data-sec="about"><b>01</b>About</a><a href="#experience" data-sec="experience"><b>02</b>Experience</a><a href="#projects" data-sec="projects"><b>03</b>Projects</a><a href="#writing" data-sec="writing"><b>04</b>Writing</a></nav>
+    <nav class="tb-nav" aria-label="Sections"><a href="#about" data-sec="about"><b>01</b>About</a><a href="#experience" data-sec="experience"><b>02</b>Experience</a><a href="#projects" data-sec="projects"><b>03</b>Projects</a><a href="#writing" data-sec="writing"><b>04</b>Writing</a><a href="#hire" data-sec="hire"><b>05</b>Hire me</a></nav>
     <a class="tb-cv" id="tbCv" download>Resume <span aria-hidden="true">↓</span></a>
     <div class="tb-theme">
       <button class="tb-pal" id="palBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="palMenu" aria-label="Change colour theme"><span class="sw"><i></i><i></i><i></i></span><span class="lbl">Theme</span></button>
@@ -46,11 +46,12 @@
         <a href="#experience" data-sec="experience"><i></i><b>02</b><span>Experience</span></a>
         <a href="#projects" data-sec="projects"><i></i><b>03</b><span>Projects</span></a>
         <a href="#writing" data-sec="writing"><i></i><b>04</b><span>Writing</span></a>
+        <a href="#hire" data-sec="hire"><i></i><b>05</b><span>Hire me</span></a>
       </nav>
     </div>
     <div class="viz" aria-hidden="true"></div>
     <div class="side-foot">
-      <ul class="socials" id="socials" aria-label="Social media"></ul>
+      <ul class="socials" id="socials" aria-label="Contact and links"></ul>
     </div>
   </header>
 
@@ -75,19 +76,26 @@
       <section id="writing" class="sec" aria-label="Writing" data-num="04">
         <header class="sec-head"><span class="num">04</span><div><h2>Writing</h2><p class="kicker">Notes on Medium</p></div></header>
         <ol class="list" id="writingList"></ol>
-        <footer class="foot">
-          <p>Want to talk about RAG, agents or an ML role? Email <a id="footMail"></a>.</p>
-          <p class="small">Hand-built with plain HTML, CSS and JavaScript. Hosted on GitHub Pages.</p>
-        </footer>
-        <nav class="pager" aria-label="Section pages"><a class="pg prev" href="#projects" data-sec="projects"><small>Previous</small><span>← Projects</span></a><a class="pg next" href="#about" data-sec="about"><small>Back to start</small><span>About ↺</span></a></nav>
+        <a class="arrow-link" href="#hire" data-sec="hire">Want to work together? <span aria-hidden="true">→</span></a>
+        <nav class="pager" aria-label="Section pages"><a class="pg prev" href="#projects" data-sec="projects"><small>Previous</small><span>← Projects</span></a><a class="pg next" href="#hire" data-sec="hire"><small>Next</small><span>Hire me →</span></a></nav>
+      </section>
+      <section id="hire" class="sec" aria-label="Hire me" data-num="05">
+        <header class="sec-head"><span class="num">05</span><div><h2>Hire me</h2><p class="kicker">Why work with me, and how to reach me</p></div></header>
+        <h3 class="sub-h">What you get</h3>
+        <ol class="why" id="whyList"></ol>
+        <h3 class="sub-h">How I work</h3>
+        <ol class="steps" id="processList"></ol>
+        <div class="contact" id="contactBox"></div>
+        <footer class="foot"><p class="small">Hand-built with plain HTML, CSS and JavaScript. Hosted on GitHub Pages.</p></footer>
+        <nav class="pager" aria-label="Section pages"><a class="pg prev" href="#writing" data-sec="writing"><small>Previous</small><span>← Writing</span></a><a class="pg next" href="#about" data-sec="about"><small>Back to start</small><span>About ↺</span></a></nav>
       </section>
   </main>
 </div>
 
 <dialog id="modal" aria-labelledby="mTitle"><div id="modalBody"></div></dialog>
 <noscript><p style="text-align:center;padding:2rem">This site needs JavaScript to show its content. Email <a href="mailto:faraz.sheikh2001@gmail.com">faraz.sheikh2001@gmail.com</a>.</p></noscript>
-<script src="assets/js/content.js?v=25" defer></script>
-<script src="assets/js/field.js?v=25" defer></script>
-<script src="assets/js/main.js?v=25" defer></script>
+<script src="assets/js/content.js?v=32" defer></script>
+<script src="assets/js/field.js?v=32" defer></script>
+<script src="assets/js/main.js?v=32" defer></script>
 </body>
 </html>

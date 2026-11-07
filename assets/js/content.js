@@ -18,6 +18,7 @@ window.SITE = {
     linkedin: "https://www.linkedin.com/in/ahmadfarazsheikh",
     github: "https://github.com/FarazSheikh16",
     medium: "https://medium.com/@faraz.sheikh",
+    whatsapp: "https://wa.me/923364987342",
     cv: "assets/doc/Ahmad-Faraz-Sheikh-CV.pdf"
   },
 
@@ -50,6 +51,26 @@ window.SITE = {
     { icon: "eye", title: "Computer vision and DL", text: "Near real-time risk detection in video, pose estimation with ViT, graph neural networks and CLIP embeddings." },
     { icon: "cloud", title: "Deployment", text: "FastAPI services on AWS with Terraform, or private on-prem stacks with Docker and open-source LLMs on vLLM." }
   ],
+
+  /* Hire me page: what a team gets, each backed by a real result */
+  why: [
+    { t: "Answers you can trust", d: "Retrieval that cites the exact source, and says so when the answer isn't in the data instead of guessing.", proof: "Zonlex: every answer links to a section ID" },
+    { t: "Agents that stay inside the lines", d: "Guardrails at the tool and input/output level, memory across sessions, and tools loaded only when the task needs them.", proof: "Agent platform: guardrails at 2 levels" },
+    { t: "Clean data before clever models", d: "Async ingestion with normalization, hash-based dedup and revision tracking, so the model reads one clean version of the truth.", proof: "BeyondOne: 49 news sources and 6 metric providers" },
+    { t: "Quality you can measure", d: "Gold-set evals, LLM-as-judge scoring and Langfuse traces, so quality is a number you can watch, not a feeling.", proof: "Zonlex: recall, answerability and correctness tracked" },
+    { t: "Runs where your data has to live", d: "On AWS with Terraform, Lambda and ECS, or fully on-prem with open-source models on vLLM when data can't leave the building.", proof: "EDI: a private LLM stack, on-prem" },
+    { t: "Work your team can own", d: "I write up what I build and why, so the system doesn't depend on me after handover.", proof: "4 technical articles on Medium" }
+  ],
+  process: [
+    ["Understand the question", "What must the system answer, from which data, and how will we know it's right?"],
+    ["Build with evals from day one", "A small gold set and tracing go in before features, so every change is measured."],
+    ["Ship and watch it", "Deploy on your stack with monitoring and alerts, then tune from real usage."]
+  ],
+  contact: {
+    title: "Let's talk",
+    text: "Tell me what you're building and where it's stuck: a RAG system that guesses, an agent you can't trust yet, or data that won't stay clean.",
+    where: "Based in Islamabad, Pakistan (UTC+5)"
+  },
 
   experience: [
     {

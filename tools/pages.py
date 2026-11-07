@@ -5,7 +5,7 @@ Bump ASSET_VERSION after changing CSS or JS so returning visitors get the new fi
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-ASSET_VERSION = "25"
+ASSET_VERSION = "32"
 NAME = "Ahmad Faraz Sheikh"
 EMAIL = "faraz.sheikh2001@gmail.com"
 
@@ -15,6 +15,7 @@ SECTIONS = [
     ("experience", "Experience", "Where I have shipped"),
     ("projects", "Projects", "Selected client work"),
     ("writing", "Writing", "Notes on Medium"),
+    ("hire", "Hire me", "Why work with me, and how to reach me"),
 ]
 
 
@@ -81,7 +82,7 @@ HOME = '''<canvas id="field" aria-hidden="true"></canvas>
     </div>
     <div class="viz" aria-hidden="true"></div>
     <div class="side-foot">
-      <ul class="socials" id="socials" aria-label="Social media"></ul>
+      <ul class="socials" id="socials" aria-label="Contact and links"></ul>
     </div>
   </header>
 
@@ -92,10 +93,13 @@ HOME = '''<canvas id="field" aria-hidden="true"></canvas>
     + sec(2, '''        <ol class="list" id="projectList"></ol>
         <a class="arrow-link" href="projects.html">View full project archive <span aria-hidden="true">→</span></a>''') \
     + sec(3, '''        <ol class="list" id="writingList"></ol>
-        <footer class="foot">
-          <p>Want to talk about RAG, agents or an ML role? Email <a id="footMail"></a>.</p>
-          <p class="small">Hand-built with plain HTML, CSS and JavaScript. Hosted on GitHub Pages.</p>
-        </footer>''') + '''  </main>
+        <a class="arrow-link" href="#hire" data-sec="hire">Want to work together? <span aria-hidden="true">→</span></a>''') \
+    + sec(4, '''        <h3 class="sub-h">What you get</h3>
+        <ol class="why" id="whyList"></ol>
+        <h3 class="sub-h">How I work</h3>
+        <ol class="steps" id="processList"></ol>
+        <div class="contact" id="contactBox"></div>
+        <footer class="foot"><p class="small">Hand-built with plain HTML, CSS and JavaScript. Hosted on GitHub Pages.</p></footer>''') + '''  </main>
 </div>
 '''
 

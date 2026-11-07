@@ -57,14 +57,20 @@
     GitHub: "M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.6.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1 .9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3",
     LinkedIn: "M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z",
     Medium: "M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z",
+    WhatsApp: "M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.08-.13-.28-.2-.57-.35m-5.42 7.4h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.89 9.88m8.41-18.3A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89a11.82 11.82 0 0 0-3.48-8.41Z",
     Email: null
   };
   const mailIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6 9 7 9-7"/></svg>';
   const cvIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>';
-  put("socials", [["GitHub", P.github], ["LinkedIn", P.linkedin], ["Medium", P.medium], ["Email", "mailto:" + P.email], ["CV", P.cv]].map(([n, h]) => {
-    const svg = n === "Email" ? mailIcon : n === "CV" ? cvIcon : `<svg viewBox="0 0 24 24" fill="currentColor"><path d="${SI[n]}"/></svg>`;
+  /* contact row under the AF: labelled pills for the ways to reach me, icons for the rest */
+  const siSvg = (n) => `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="${SI[n]}"/></svg>`;
+  const links = [
+    ["LinkedIn", P.linkedin, siSvg("LinkedIn")], ["Email", "mailto:" + P.email, mailIcon], ["WhatsApp", P.whatsapp, siSvg("WhatsApp")],
+    ["GitHub", P.github, siSvg("GitHub")], ["Medium", P.medium, siSvg("Medium")], ["CV", P.cv, cvIcon]
+  ].filter((x) => x[1]);
+  put("socials", links.map(([n, h, svg]) => {
     const attrs = h.startsWith("http") ? ext : n === "CV" ? "download" : "";
-    return `<li><a href="${h}" ${attrs} aria-label="${n === "CV" ? "Download CV (PDF)" : n}" title="${n === "CV" ? "Download CV" : n}">${svg}</a></li>`;
+    return `<li><a class="pill" href="${h}" ${attrs}${n === "CV" ? ' aria-label="Download CV (PDF)"' : ""}>${svg}<span>${n}</span></a></li>`;
   }).join(""));
 
   /* about */
@@ -107,6 +113,37 @@
       <p class="desc">${esc(w.text)}</p>
     </div>
   </li>`).join(""));
+
+  /* hire me: what you get, how I work, contact buttons */
+  if (S.why) put("whyList", S.why.map((w, i) => `<li class="why-card">
+    <span class="n">0${i + 1}</span>
+    <h4>${esc(w.t)}</h4>
+    <p>${esc(w.d)}</p>
+    <p class="proof"><span aria-hidden="true">✓</span> ${esc(w.proof)}</p>
+  </li>`).join(""));
+  if (S.process) put("processList", S.process.map(([t, d], i) => `<li><b>${i + 1}</b><div><h4>${esc(t)}</h4><p>${esc(d)}</p></div></li>`).join(""));
+  if (S.contact) {
+    const C = S.contact;
+    const mail = `mailto:${P.email}?subject=${encodeURIComponent("Hello from your portfolio")}`;
+    const svgOf = (n) => n === "CV" ? cvIcon : `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="${SI[n]}"/></svg>`;
+    put("contactBox", `<h3>${esc(C.title)}</h3>
+      <p class="c-text">${esc(C.text)}</p>
+      <div class="c-mail"><a class="c-primary" href="${mail}">${mailIcon} Email me</a><button type="button" class="c-copy" id="copyMail"><span>${esc(P.email)}</span><em>Copy</em></button></div>
+      <div class="c-links">
+        <a href="${P.linkedin}" ${ext}>${svgOf("LinkedIn")} LinkedIn</a>
+        ${P.whatsapp ? `<a href="${P.whatsapp}" ${ext}>${svgOf("WhatsApp")} WhatsApp</a>` : ""}
+        <a href="${P.github}" ${ext}>${svgOf("GitHub")} GitHub</a>
+        <a href="${P.medium}" ${ext}>${svgOf("Medium")} Medium</a>
+        <a href="${P.cv}" download>${svgOf("CV")} Download CV</a>
+      </div>
+      <p class="c-where">${esc(C.where)}</p>`);
+    $("#copyMail")?.addEventListener("click", async (e) => {
+      const b = e.currentTarget, em = b.querySelector("em");
+      try { await navigator.clipboard.writeText(P.email); em.textContent = "Copied ✓"; }
+      catch { em.textContent = "Select & copy"; }
+      setTimeout(() => (em.textContent = "Copy"), 2000);
+    });
+  }
 
   /* footer */
   const fm = $("#footMail");
