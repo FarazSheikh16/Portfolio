@@ -17,7 +17,7 @@
   let labels = [];               // {x, y, text, g, align}
   let section = "about", focus = -1, setAt = 0;
   let mx = -9999, my = -9999, mouseIn = false;
-  let accent = "#f2b84b", dim = "#636c77", head = "#e6e8eb";
+  let accent = "#e2c58f", dim = "#7f8c7d", head = "#efe6d2", electric = "#a77bff";
   const rnd = (a, b) => a + Math.random() * (b - a);
   const gauss = () => { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
 
@@ -26,6 +26,7 @@
     accent = cs.getPropertyValue("--accent").trim() || accent;
     dim = cs.getPropertyValue("--dim").trim() || dim;
     head = cs.getPropertyValue("--head").trim() || head;
+    electric = cs.getPropertyValue("--electric").trim() || electric;
   };
 
   /* the box the shape lives in, in canvas coordinates */
@@ -118,8 +119,8 @@
 
   const resize = () => {
     dpr = Math.min(devicePixelRatio || 1, 2);
-    if (desk.matches) { W = innerWidth; H = innerHeight; cv.style.height = ""; }
-    else { const r = viz.getBoundingClientRect(); W = innerWidth; H = Math.ceil(r.bottom + scrollY + 30); cv.style.height = H + "px"; }
+    if (desk.matches) { W = Math.ceil(document.querySelector(".side").getBoundingClientRect().right); H = innerHeight; cv.style.height = ""; cv.style.width = W + "px"; }
+    else { cv.style.width = ""; const r = viz.getBoundingClientRect(); W = innerWidth; H = Math.ceil(r.bottom + scrollY + 30); cv.style.height = H + "px"; }
     cv.width = W * dpr; cv.height = H * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const want = desk.matches ? 900 : 420;
@@ -167,8 +168,12 @@
 
     // ambient field
     ctx.fillStyle = dim;
-    ctx.globalAlpha = desk.matches ? 0.45 : 0.3;
-    for (const p of P) if (p.amb) ctx.fillRect(p.x, p.y, p.s, p.s);
+    const base = desk.matches ? 0.45 : 0.3;
+    for (const p of P) if (p.amb) {
+      // fade out where the green shades into sand
+      ctx.globalAlpha = base * Math.max(0, Math.min(1, desk.matches ? (W - p.x) / 220 : (H - 60 - p.y) / 200));
+      ctx.fillRect(p.x, p.y, p.s, p.s);
+    }
 
     // the shape
     ctx.fillStyle = accent;
@@ -198,13 +203,13 @@
     if (mouseIn && near.length) {
       near.sort((a, b) => a[0] - b[0]);
       const k = Math.min(6, near.length);
-      ctx.strokeStyle = accent; ctx.lineWidth = 1;
+      ctx.strokeStyle = electric; ctx.lineWidth = 1;
       for (let i = 0; i < k; i++) {
         const [d, p] = near[i];
         ctx.globalAlpha = 0.5 * (1 - d / 170);
         ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(p.x, p.y); ctx.stroke();
       }
-      ctx.globalAlpha = 0.9; ctx.fillStyle = accent;
+      ctx.globalAlpha = 0.95; ctx.fillStyle = electric;
       ctx.beginPath(); ctx.arc(mx, my, 2.5, 0, 6.28); ctx.fill();
       ctx.globalAlpha = 0.6; ctx.fillStyle = dim; ctx.font = `500 10px ${MONO}`; ctx.textAlign = "left"; ctx.textBaseline = "top";
       ctx.fillText("query · k=" + k, mx + 10, my + 8);
@@ -234,6 +239,7 @@
 
   window.Field = {
     set(id) { if (id === section && P.length) return; section = id; focus = -1; readColors(); retarget(true); },
+    refresh() { readColors(); if (reduce) draw(performance.now()); },
     focus(i) { focus = i; if (reduce) draw(performance.now()); }
   };
 

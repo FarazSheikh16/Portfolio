@@ -5,7 +5,7 @@ Bump ASSET_VERSION after changing CSS or JS so returning visitors get the new fi
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-ASSET_VERSION = "12"
+ASSET_VERSION = "21"
 NAME = "Ahmad Faraz Sheikh"
 EMAIL = "faraz.sheikh2001@gmail.com"
 
@@ -36,17 +36,39 @@ def sec(i, inner):
 
 TOC = "\n".join(f'        <a href="#{sid}" data-sec="{sid}"><i></i><b>0{n + 1}</b><span>{label}</span></a>' for n, (sid, label, _) in enumerate(SECTIONS))
 TABS = "".join(f'<a href="#{sid}" data-sec="{sid}"><b>0{n + 1}</b>{label}</a>' for n, (sid, label, _) in enumerate(SECTIONS))
-TOPBAR = '''<div class="topbar" role="banner">
+PALETTES = [  # id, name, accent note, dark, light, accent (keep in sync with style.css)
+    ("navy", "Navy & Cream", "with a hint of coral", "#0f1b33", "#f3ead8", "#ff7a66"),
+    ("forest", "Forest & Sand", "with a hint of electric purple", "#11261c", "#ece3d0", "#b08cff"),
+    ("mono", "Midnight & White", "with a hint of lime", "#0a0a0b", "#ffffff", "#c6ff3d"),
+]
+PAL_MENU = "".join(
+    f'<li role="none"><button type="button" role="menuitemradio" aria-checked="false" data-pal="{pid}">'
+    f'<span class="sw" style="--d:{d};--l:{l};--s:{s}"><i></i><i></i><i></i></span><span>{name}<small>{note}</small></span></button></li>'
+    for pid, name, note, d, l, s in PALETTES)
+
+
+def topbar(home):
+    if home:
+        links, brand = TABS, '<a class="brand" href="#about" data-sec="about" aria-label="Ahmad Faraz Sheikh, back to start"><span>AF</span></a>'
+    else:
+        links = "".join(f'<a href="index.html#{sid}"><b>0{n + 1}</b>{label}</a>' for n, (sid, label, _) in enumerate(SECTIONS))
+        brand = '<a class="brand" href="index.html" aria-label="Ahmad Faraz Sheikh, home"><span>AF</span></a>'
+    return f'''<div class="topbar" role="banner">
   <div class="tb-in">
-    <a class="brand" href="#about" data-sec="about" aria-label="Ahmad Faraz Sheikh, back to start"><span>AF</span></a>
-    <nav class="tb-nav" aria-label="Sections">''' + TABS + '''</nav>
+    {brand}
+    <nav class="tb-nav" aria-label="Sections">{links}</nav>
     <a class="tb-cv" id="tbCv" download>Resume <span aria-hidden="true">↓</span></a>
+    <div class="tb-theme">
+      <button class="tb-pal" id="palBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="palMenu" aria-label="Change colour theme"><span class="sw"><i></i><i></i><i></i></span><span class="lbl">Theme</span></button>
+      <ul class="pal-menu" id="palMenu" role="menu" aria-label="Colour themes" hidden>{PAL_MENU}</ul>
+    </div>
   </div>
 </div>
 '''
 
+
 HOME = '''<canvas id="field" aria-hidden="true"></canvas>
-''' + TOPBAR + '''<div class="layout">
+''' + topbar(True) + '''<div class="layout">
   <header class="side">
     <div>
       <h1><a href="index.html">Ahmad Faraz Sheikh</a></h1>
@@ -60,13 +82,10 @@ HOME = '''<canvas id="field" aria-hidden="true"></canvas>
     <div class="viz" aria-hidden="true"></div>
     <div class="side-foot">
       <ul class="socials" id="socials" aria-label="Social media"></ul>
-      <button class="theme" id="themeBtn" type="button" aria-label="Switch between dark and light">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-      </button>
     </div>
   </header>
 
-  <main id="main" class="content">
+  <main id="main" class="content sand">
 ''' + sec(0, '''        <div class="about" id="aboutText"></div>''') \
     + sec(1, '''        <ol class="list" id="experienceList"></ol>
         <a class="arrow-link" id="cvLink" download>Download full CV <span aria-hidden="true">→</span></a>''') \
@@ -80,14 +99,18 @@ HOME = '''<canvas id="field" aria-hidden="true"></canvas>
 </div>
 '''
 
-ARCHIVE = '''<main id="main" class="archive">
-  <a class="back" href="index.html"><span aria-hidden="true">←</span> Ahmad Faraz Sheikh</a>
-  <h1>All projects</h1>
-  <p class="lead">Client systems from Redbuffer, university projects from PIEAS, and other code on GitHub.</p>
-  <table class="arch-table">
-    <thead><tr><th>Year</th><th>Project</th><th class="hide-sm">Made at</th><th class="hide-md">Built with</th><th class="hide-sm">Link</th></tr></thead>
-    <tbody id="archiveRows"></tbody>
-  </table>
+ARCHIVE = topbar(False) + '''<main id="main" class="archive">
+  <header class="arch-head"><div class="arch-in">
+    <a class="back" href="index.html"><span aria-hidden="true">←</span> Ahmad Faraz Sheikh</a>
+    <h1>All projects</h1>
+    <p class="lead">Client systems from Redbuffer, university projects from PIEAS, and other code on GitHub.</p>
+  </div></header>
+  <div class="arch-body sand fade"><div class="arch-in">
+    <table class="arch-table">
+      <thead><tr><th>Year</th><th>Project</th><th class="hide-sm">Made at</th><th class="hide-md">Built with</th><th class="hide-sm">Link</th></tr></thead>
+      <tbody id="archiveRows"></tbody>
+    </table>
+  </div></div>
 </main>
 '''
 
@@ -120,9 +143,9 @@ def page(fname, cfg):
 <meta property="og:description" content="{cfg["desc"]}">
 <meta property="og:image" content="assets/img/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0e1013">
+<meta name="theme-color" content="#11261c">
+<script>try{{var m=location.search.match(/[?&]palette=([a-z]+)/),p=m?m[1]:localStorage.getItem("palette");if(p)document.documentElement.dataset.palette=p}}catch(e){{}}</script>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<script>try{{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -132,7 +155,7 @@ def page(fname, cfg):
 <div class="spot" aria-hidden="true"></div>
 <a class="skip" href="#main">Skip to content</a>
 {cfg["body"]}
-<dialog id="modal" aria-labelledby="mTitle"><div id="modalBody"></div></dialog>
+<dialog id="modal" class="sand" aria-labelledby="mTitle"><div id="modalBody"></div></dialog>
 <noscript><p style="text-align:center;padding:2rem">This site needs JavaScript to show its content. Email <a href="mailto:{EMAIL}">{EMAIL}</a>.</p></noscript>
 <script src="assets/js/content.js?v={v}" defer></script>
 <script src="assets/js/field.js?v={v}" defer></script>

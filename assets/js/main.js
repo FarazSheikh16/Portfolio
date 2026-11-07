@@ -10,14 +10,39 @@
   const tags = (arr) => `<ul class="tags" aria-label="Technologies">${arr.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`;
   const byId = Object.fromEntries(S.projects.map((p) => [p.id, p]));
 
-  /* theme */
   const root = document.documentElement;
-  const sysLight = matchMedia("(prefers-color-scheme: light)");
-  $("#themeBtn")?.addEventListener("click", () => {
-    const light = root.dataset.theme ? root.dataset.theme === "light" : sysLight.matches;
-    root.dataset.theme = light ? "dark" : "light";
-    try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
-  });
+
+  /* colour themes: the second button in the top bar */
+  const THEME_COLOR = { navy: "#0f1b33", forest: "#11261c", mono: "#0a0a0b" };
+  const palBtn = $("#palBtn"), palMenu = $("#palMenu");
+  const setPalette = (id, save) => {
+    if (!THEME_COLOR[id]) id = "forest";
+    root.dataset.palette = id;
+    $('meta[name="theme-color"]')?.setAttribute("content", THEME_COLOR[id]);
+    $$("[data-pal]").forEach((b) => b.setAttribute("aria-checked", String(b.dataset.pal === id)));
+    if (save) { try { localStorage.setItem("palette", id); } catch (e) {} }
+    window.Field?.refresh?.();
+  };
+  setPalette(root.dataset.palette || "forest");
+  if (palBtn && palMenu) {
+    const openMenu = (open) => {
+      palMenu.hidden = !open;
+      palBtn.setAttribute("aria-expanded", String(open));
+      if (open) (palMenu.querySelector('[aria-checked="true"]') || palMenu.querySelector("button"))?.focus();
+    };
+    palBtn.addEventListener("click", () => openMenu(palMenu.hidden));
+    palMenu.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-pal]");
+      if (b) { setPalette(b.dataset.pal, true); openMenu(false); palBtn.focus(); }
+    });
+    palMenu.addEventListener("keydown", (e) => {
+      const items = $$("[data-pal]", palMenu), i = items.indexOf(document.activeElement);
+      if (e.key === "ArrowDown") { e.preventDefault(); items[(i + 1) % items.length].focus(); }
+      if (e.key === "ArrowUp") { e.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); }
+    });
+    document.addEventListener("click", (e) => { if (!palMenu.hidden && !e.target.closest(".tb-theme")) openMenu(false); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !palMenu.hidden) { openMenu(false); palBtn.focus(); } });
+  }
 
   /* cursor spotlight */
   const spot = $(".spot");
@@ -164,7 +189,7 @@
       it.addEventListener("focusout", () => window.Field?.focus(-1));
     }));
     addEventListener("keydown", (e) => {
-      if (modal?.open || e.altKey || e.metaKey || e.ctrlKey || /INPUT|TEXTAREA/.test(document.activeElement?.tagName || "")) return;
+      if (modal?.open || (palMenu && !palMenu.hidden) || e.altKey || e.metaKey || e.ctrlKey || /INPUT|TEXTAREA/.test(document.activeElement?.tagName || "")) return;
       const k = order.indexOf(current);
       if (e.key === "ArrowRight" && k < order.length - 1) show(order[k + 1], true);
       if (e.key === "ArrowLeft" && k > 0) show(order[k - 1], true);
