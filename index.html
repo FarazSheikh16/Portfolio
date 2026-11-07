@@ -17,12 +17,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=11">
+<link rel="stylesheet" href="assets/css/style.css?v=12">
 </head>
 <body data-page="index">
 <div class="spot" aria-hidden="true"></div>
 <a class="skip" href="#main">Skip to content</a>
 <canvas id="field" aria-hidden="true"></canvas>
+<div class="topbar" role="banner">
+  <div class="tb-in">
+    <a class="brand" href="#about" data-sec="about" aria-label="Ahmad Faraz Sheikh, back to start"><span>AF</span></a>
+    <nav class="tb-nav" aria-label="Sections"><a href="#about" data-sec="about"><b>01</b>About</a><a href="#experience" data-sec="experience"><b>02</b>Experience</a><a href="#projects" data-sec="projects"><b>03</b>Projects</a><a href="#writing" data-sec="writing"><b>04</b>Writing</a></nav>
+    <a class="tb-cv" id="tbCv" download>Resume <span aria-hidden="true">↓</span></a>
+  </div>
+</div>
 <div class="layout">
   <header class="side">
     <div>
@@ -47,7 +54,6 @@
   </header>
 
   <main id="main" class="content">
-    <nav class="tabs" aria-label="Sections"><a href="#about" data-sec="about">About</a><a href="#experience" data-sec="experience">Experience</a><a href="#projects" data-sec="projects">Projects</a><a href="#writing" data-sec="writing">Writing</a></nav>
       <section id="about" class="sec" aria-label="About" data-num="01">
         <header class="sec-head"><span class="num">01</span><div><h2>About</h2><p class="kicker">How I think about ML in production</p></div></header>
         <div class="about" id="aboutText"></div>
@@ -79,8 +85,8 @@
 
 <dialog id="modal" aria-labelledby="mTitle"><div id="modalBody"></div></dialog>
 <noscript><p style="text-align:center;padding:2rem">This site needs JavaScript to show its content. Email <a href="mailto:faraz.sheikh2001@gmail.com">faraz.sheikh2001@gmail.com</a>.</p></noscript>
-<script src="assets/js/content.js?v=11" defer></script>
-<script src="assets/js/field.js?v=11" defer></script>
-<script src="assets/js/main.js?v=11" defer></script>
+<script src="assets/js/content.js?v=12" defer></script>
+<script src="assets/js/field.js?v=12" defer></script>
+<script src="assets/js/main.js?v=12" defer></script>
 </body>
 </html>

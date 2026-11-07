@@ -60,6 +60,8 @@
   }).join(""));
   const cvLink = $("#cvLink");
   if (cvLink) cvLink.href = P.cv;
+  const tbCv = $("#tbCv");
+  if (tbCv) tbCv.href = P.cv;
 
   /* projects */
   put("projectList", S.projects.filter((p) => p.featured).map((p) => `<li class="item">
@@ -130,12 +132,14 @@
     secs.forEach((s) => { const on = s.id === id; s.classList.toggle("on", on); s.toggleAttribute("inert", !on); if (on) s.scrollTop = 0; });
     $$("[data-sec]").forEach((a) => a.classList.toggle("active", a.dataset.sec === id && !a.classList.contains("pg")));
     if (push) history.pushState(null, "", "#" + id);
-    const tabs = $(".tabs");
-    if (tabs && getComputedStyle(tabs).display !== "none") {
-      const y = tabs.offsetTop;
+    const nav = $(".tb-nav");
+    const at = $(".tb-nav a.active");
+    if (nav && at && nav.scrollWidth > nav.clientWidth) nav.scrollTo({ left: at.offsetLeft - nav.offsetLeft - 16, behavior: reduce ? "auto" : "smooth" });
+    if (push && !matchMedia("(min-width: 1024px)").matches) {
+      // phones: jump to the top of the new page, just under the bar
+      const main = $("#main"), bar = $(".topbar");
+      const y = main.getBoundingClientRect().top + scrollY - (bar ? bar.offsetHeight : 0) - 8;
       if (scrollY > y) scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
-      const at = $(".tabs a.active");
-      if (at) tabs.scrollTo({ left: at.offsetLeft - 24, behavior: reduce ? "auto" : "smooth" });
     }
   };
   if (secs.length) {

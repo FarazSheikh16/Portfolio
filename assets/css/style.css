@@ -45,8 +45,8 @@ b,strong{color:var(--head);font-weight:500}
 @media (min-width:768px){.layout{padding:0 48px}}
 @media (min-width:1024px){.layout{display:flex;justify-content:space-between;gap:4rem;padding:0 96px}}
 
-.side{padding:64px 0 24px}
-@media (min-width:1024px){.side{position:sticky;top:0;height:100vh;width:46%;display:flex;flex-direction:column;justify-content:space-between;padding:96px 0}}
+.side{padding:40px 0 24px}
+@media (min-width:1024px){.side{position:sticky;top:0;height:100vh;width:46%;display:flex;flex-direction:column;justify-content:space-between;padding:112px 0 56px}}
 .side h1{font-size:clamp(2.4rem,5vw,3.1rem);line-height:1.05;font-weight:700;letter-spacing:-.03em;color:var(--head)}
 .role{margin-top:.8rem;font-size:1.2rem;font-weight:500;color:var(--head);letter-spacing:-.01em}
 .typed{margin-top:1.4rem;min-height:1.6em;font:500 .95rem/1.6 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:var(--accent);transition:color .4s}
@@ -81,15 +81,30 @@ b,strong{color:var(--head);font-weight:500}
 .theme svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
 @media (min-width:1024px){.theme{margin-left:0}}
 
-.content{padding:0 0 64px;position:relative}
+.content{padding:2.5rem 0 64px;position:relative}
 
-/* mobile tab bar (the left column's nav takes over on desktop) */
-.tabs{position:sticky;top:0;z-index:20;display:flex;gap:1.5rem;overflow-x:auto;scrollbar-width:none;margin:0 -24px 2rem;padding:0 24px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.tabs::-webkit-scrollbar{display:none}
-@media (min-width:768px){.tabs{margin:0 -48px 2rem;padding:0 48px}}
-.tabs a{flex:none;padding:1rem 0 .9rem;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .3s}
-.tabs a.active{color:var(--head);border-color:var(--accent)}
-@media (min-width:1024px){.tabs{display:none}}
+/* top bar: brand, sections, resume (fixed on desktop, sticky on phones) */
+.topbar{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+@media (min-width:1024px){.topbar{position:fixed;left:0;right:0}}
+.tb-in{max-width:1280px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;gap:1.25rem}
+@media (min-width:768px){.tb-in{padding:0 48px}}
+@media (min-width:1024px){.tb-in{padding:0 96px;height:64px}}
+.brand{flex:none;display:grid;place-items:center;width:36px;height:36px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font:700 .8rem ui-monospace,Menlo,monospace;letter-spacing:.02em;transition:color .3s,border-color .3s,background .2s}
+.brand:hover,.brand.active:hover{background:var(--pill)}
+.tb-nav{flex:1;min-width:0;display:flex;gap:1.6rem;overflow-x:auto;scrollbar-width:none;justify-content:flex-end;height:100%}
+.tb-nav::-webkit-scrollbar{display:none}
+@media (max-width:639px){.tb-nav{justify-content:flex-start;gap:1.2rem;margin-right:-24px;padding-right:24px}}
+.tb-nav a{position:relative;flex:none;display:flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:600;color:var(--dim);transition:color .2s}
+.tb-nav a b{font:500 .7rem ui-monospace,Menlo,monospace;color:inherit}
+.tb-nav a::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent);transform:scaleX(0);transition:transform .3s cubic-bezier(.2,.7,.2,1),background .3s}
+.tb-nav a:hover{color:var(--head)}
+.tb-nav a.active{color:var(--head)}
+.tb-nav a.active b{color:var(--accent)}
+.tb-nav a.active::after{transform:scaleX(1)}
+.tb-cv{flex:none;display:inline-flex;align-items:center;gap:.35rem;padding:.42rem .9rem;border:1px solid var(--accent);border-radius:6px;color:var(--accent);font-size:.82rem;font-weight:600;transition:background .2s,color .3s,border-color .3s}
+.tb-cv:hover{background:var(--pill)}
+@media (max-width:639px){.tb-cv{display:none}}
+.content > .sec:first-of-type{margin-top:0}
 
 /* ---------- section pages ---------- */
 .sec{display:none;position:relative}
@@ -101,7 +116,7 @@ b,strong{color:var(--head);font-weight:500}
   body[data-page="index"]{overflow:hidden}
   .layout{height:100vh}
   .content{width:54%;height:100vh;padding:0}
-  .sec,.sec.on{display:block;position:absolute;top:0;bottom:0;left:-1.75rem;right:-1.75rem;overflow-y:auto;overscroll-behavior:contain;padding:96px 1.75rem 72px;scrollbar-width:thin;scrollbar-color:var(--line) transparent;
+  .sec,.sec.on{display:block;position:absolute;top:0;bottom:0;left:-1.75rem;right:-1.75rem;overflow-y:auto;overscroll-behavior:contain;padding:112px 1.75rem 72px;scrollbar-width:thin;scrollbar-color:var(--line) transparent;
     opacity:0;visibility:hidden;transform:translateY(18px);transition:opacity .45s ease,transform .55s cubic-bezier(.2,.7,.2,1),visibility 0s .45s;animation:none}
   .sec.on{opacity:1;visibility:visible;transform:none;transition:opacity .45s ease .08s,transform .55s cubic-bezier(.2,.7,.2,1) .08s,visibility 0s}
   .sec::before{right:1.75rem;top:3.5rem}

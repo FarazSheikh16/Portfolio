@@ -5,7 +5,7 @@ Bump ASSET_VERSION after changing CSS or JS so returning visitors get the new fi
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-ASSET_VERSION = "11"
+ASSET_VERSION = "12"
 NAME = "Ahmad Faraz Sheikh"
 EMAIL = "faraz.sheikh2001@gmail.com"
 
@@ -35,10 +35,18 @@ def sec(i, inner):
 
 
 TOC = "\n".join(f'        <a href="#{sid}" data-sec="{sid}"><i></i><b>0{n + 1}</b><span>{label}</span></a>' for n, (sid, label, _) in enumerate(SECTIONS))
-TABS = "".join(f'<a href="#{sid}" data-sec="{sid}">{label}</a>' for sid, label, _ in SECTIONS)
+TABS = "".join(f'<a href="#{sid}" data-sec="{sid}"><b>0{n + 1}</b>{label}</a>' for n, (sid, label, _) in enumerate(SECTIONS))
+TOPBAR = '''<div class="topbar" role="banner">
+  <div class="tb-in">
+    <a class="brand" href="#about" data-sec="about" aria-label="Ahmad Faraz Sheikh, back to start"><span>AF</span></a>
+    <nav class="tb-nav" aria-label="Sections">''' + TABS + '''</nav>
+    <a class="tb-cv" id="tbCv" download>Resume <span aria-hidden="true">↓</span></a>
+  </div>
+</div>
+'''
 
 HOME = '''<canvas id="field" aria-hidden="true"></canvas>
-<div class="layout">
+''' + TOPBAR + '''<div class="layout">
   <header class="side">
     <div>
       <h1><a href="index.html">Ahmad Faraz Sheikh</a></h1>
@@ -59,7 +67,6 @@ HOME = '''<canvas id="field" aria-hidden="true"></canvas>
   </header>
 
   <main id="main" class="content">
-    <nav class="tabs" aria-label="Sections">''' + TABS + '''</nav>
 ''' + sec(0, '''        <div class="about" id="aboutText"></div>''') \
     + sec(1, '''        <ol class="list" id="experienceList"></ol>
         <a class="arrow-link" id="cvLink" download>Download full CV <span aria-hidden="true">→</span></a>''') \
