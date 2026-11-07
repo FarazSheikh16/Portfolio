@@ -138,6 +138,8 @@
       <div class="m-links"><a href="mailto:${P.email}?subject=${encodeURIComponent("About " + p.short)}">Talk to me about this <span aria-hidden="true">→</span></a>${(p.links || []).map(([l, h]) => `<a href="${h}" ${ext}>${esc(l)} ↗</a>`).join("")}</div>
     </div>`;
     if (!modal.open) modal.showModal();
+    const box = $("#modalBody .m-in");
+    if (box) { box.tabIndex = -1; box.focus({ preventScroll: true }); }
     modal.scrollTop = 0;
     history.replaceState(null, "", "#" + id);
   };

@@ -5,7 +5,7 @@ Bump ASSET_VERSION after changing CSS or JS so returning visitors get the new fi
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-ASSET_VERSION = "24"
+ASSET_VERSION = "25"
 NAME = "Ahmad Faraz Sheikh"
 EMAIL = "faraz.sheikh2001@gmail.com"
 

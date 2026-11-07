@@ -15,7 +15,7 @@
   let W = 0, H = 0, dpr = 1, N = 0, SHAPE = 0;
   let P = [];                    // points
   let labels = [];               // {x, y, text, g, align}
-  let section = "about", focus = -1, setAt = 0;
+  let section = "about", focus = -1, setAt = 0, gx = 0, gy = 0;
   let mx = -9999, my = -9999, mouseIn = false;
   let accent = "#e2c58f", dim = "#7f8c7d", head = "#efe6d2", electric = "#a77bff";
   const rnd = (a, b) => a + Math.random() * (b - a);
@@ -137,6 +137,7 @@
     // shuffle which point goes where so the flow looks organic
     const order = P.slice(0, SHAPE).sort(() => Math.random() - 0.5);
     order.forEach((p, i) => { p.tx = t[i].x; p.ty = t[i].y; p.g = t[i].g; p.d = stagger ? now + Math.random() * 420 : 0; });
+    gx = t.reduce((a, q) => a + q.x, 0) / t.length; gy = t.reduce((a, q) => a + q.y, 0) / t.length;
     if (reduce) { P.forEach((p) => { if (!p.amb) { p.x = p.tx; p.y = p.ty; } else { p.x = p.bx; p.y = p.by; } }); draw(now); }
   };
 
@@ -178,7 +179,7 @@
     // accent glow behind the shape (the 10%: glow, highlight, query)
     const sb = stage();
     if (sb.w > 20) {
-      const cx = sb.x + sb.w * 0.5, cy = sb.y + sb.h * 0.55;
+      const cx = gx || sb.x + sb.w * 0.5, cy = gy || sb.y + sb.h * 0.55; // centre of the shape itself
       const r = Math.max(10, Math.min(Math.max(sb.w, sb.h) * 0.7, H - cy - 2, cy - 2)); // stay inside the canvas so no hard edge
       const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
       gr.addColorStop(0, accent); gr.addColorStop(1, "transparent");
